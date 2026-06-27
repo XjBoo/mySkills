@@ -1,0 +1,99 @@
+{
+  "skill_name": "skill-CodeViewerCppFusn",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "我刚改了一些代码，帮我 review 一下这次改的东西有没有问题。文件在 {SKILL_DIR}/evals/fixtures/diff-repo。注意该目录还不是 git 仓库——请先执行 git init 并配置 user，然后将 apiHandler_base.js 作为初始版本 commit，最后用 apiHandler.js 覆盖工作区（模拟未提交的变更），然后 git diff 做审查。",
+      "expected_output": "对 apiHandler.js 的 git diff 进行审查",
+      "files": [],
+      "expectations": [
+        "报告识别出 response.status = 404 或 item.type = 'special' 中赋值运算符误用的 bug",
+        "报告识别出 processItems 中 i <= items.length 导致数组越界的问题",
+        "报告识别出 fetchUserData 中 response.json() 缺少 await 的问题",
+        "报告包含按严重程度分类的结构化格式",
+        "报告使用中文撰写",
+        "每个问题都标注了具体的文件路径和行号"
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "这个工具函数文件我写完了，帮我检查一下有没有 bug 和可以改进的地方。文件在 {SKILL_DIR}/evals/fixtures/userUtils.js",
+      "expected_output": "对 userUtils.js 进行全文件审查",
+      "files": [],
+      "expectations": [
+        "报告识别出 getUser 或 deleteUser 中 SQL 注入风险",
+        "报告识别出 processUserData 中 i <= users.length 导致数组越界的问题",
+        "报告识别出 user.status = 'active' 中赋值运算符误用的 bug",
+        "报告指出 processUserData 中 if 嵌套层级过深的问题",
+        "报告包含按严重程度分类的结构化格式",
+        "报告使用中文撰写",
+        "每个问题都标注了具体的文件路径和行号"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "你看看这段代码怎么样，总感觉哪里不太对。文件是 {SKILL_DIR}/evals/fixtures/dataProcessor.js",
+      "expected_output": "对 dataProcessor.js 进行全文件审查",
+      "files": [],
+      "expectations": [
+        "报告指出 applyDiscount 中 forEach 导致返回 undefined 而非预期数组",
+        "报告指出 transformData 返回对象的 key（a/b/c）命名不清晰",
+        "报告指出 fetchData 中 http 未定义或缺少错误处理",
+        "报告包含按严重程度分类的结构化格式",
+        "报告使用中文撰写",
+        "每个问题都标注了具体的文件路径和行号"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "帮我 review 一下这个多目标跟踪模块的代码，检查一下代码本身有没有 bug，另外从算法策略的角度也帮忙看看有什么问题。这个模块用在高速公路场景，传感器是前视摄像头+前向毫米波雷达。文件在 {SKILL_DIR}/evals/fixtures/multiObjectTracker.js",
+      "expected_output": "对 multiObjectTracker.js 进行代码+领域策略双重审查，识别出代码层面（协方差更新不完整、卡尔曼增益简化、关联算法无互斥）和领域策略层面（CV模型不适用高速、门控固定、Q/R矩阵设计不合理、时间戳未使用等）的问题",
+      "files": [],
+      "expectations": [
+        "报告指出 updateCovariance 只更新对角线，未完整传播协方差 P = F*P*F' + Q",
+        "报告指出 update() 中卡尔曼增益计算过于简化，未使用完整 P 和 H 矩阵",
+        "报告指出 greedyAssociation 缺乏互斥约束，多个 track 可匹配同一 detection",
+        "报告从领域角度指出 CV 模型在高速场景不足以描述车辆运动",
+        "报告指出固定 gatingThreshold 应随目标距离或速度动态调整",
+        "报告指出观测噪声 R 应基于实际传感器精度指标设置",
+        "报告指出 update() 接收 timestamp 但未做时间同步或传感器异步处理",
+        "报告指出过程噪声 Q 固定为单位阵，应根据目标机动性设计",
+        "报告包含按严重程度分类的结构化格式",
+        "报告使用中文撰写",
+        "报告包含独立的领域策略点评章节"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "这个 C++ 多传感器融合模块帮我审查一下，主要是内存安全和正确性方面，这是要上车跑的代码。文件在 {SKILL_DIR}/evals/fixtures/sensorFusion.cpp",
+      "expected_output": "对 sensorFusion.cpp 进行 C++ 专项审查，识别出：delete vs delete[] 不匹配、memcpy 无边界检查、循环越界（<= count）、临时数据引用（transformToVehicle 中 data.x 被修改后复用）、未初始化成员变量、printf 格式化字符串注入、单参数构造函数未加 explicit 等问题",
+      "files": [],
+      "expectations": [
+        "报告识别出 delete buffer_ 应为 delete[] buffer_ 的分配/释放不匹配问题",
+        "报告识别出 processData 中 i <= count 的循环越界问题",
+        "报告识别出 transformToVehicle 中 data.x 修改后复用导致的计算错误",
+        "报告识别出 counter_ 成员变量未初始化",
+        "报告识别出单参数构造函数未加 explicit",
+        "报告包含按严重程度分类的结构化格式",
+        "报告使用中文撰写",
+        "报告中包含 C/C++ 工程深度评审相关建议（如实时性、确定性、编译安全等）"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "帮我审查一下这个 C++ 跟踪管理模块，关注线程安全和 C++ 语言陷阱。文件在 {SKILL_DIR}/evals/fixtures/trackManager.cpp",
+      "expected_output": "对 trackManager.cpp 进行线程安全+C++专项审查，识别出：addTrack/removeTrack 无锁保护（数据竞争）、getLatestTrack 返回临时对象引用（悬空引用）、std::thread 未 join/detach、基类析构函数非 virtual、值拷贝遍历大 vector 性能问题、除零风险、浮点数直接 == 比较等问题",
+      "files": [],
+      "expectations": [
+        "报告识别出 addTrack/removeTrack 缺少 mutex 保护的数据竞争问题",
+        "报告识别出 getLatestTrack 返回临时对象引用（悬空引用/UB）",
+        "报告识别出 std::thread 未 join/detach 导致 std::terminate",
+        "报告识别出 BasePredictor 析构函数非 virtual 的 slicing 风险",
+        "报告识别出 normalizeScores 未检查 sum==0 的除零风险",
+        "报告指出浮点数直接 == 比较应使用 epsilon 容差",
+        "报告包含按严重程度分类的结构化格式",
+        "报告使用中文撰写"
+      ]
+    }
+  ]
+}
